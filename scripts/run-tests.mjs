@@ -27,6 +27,7 @@ try {
   ]);
   await run(process.execPath, [
     "--test",
+    join(outputDirectory, "test", "autocorrect.test.js"),
     join(outputDirectory, "test", "async-limiter.test.js"),
     join(outputDirectory, "test", "eager-imports.test.js"),
     join(outputDirectory, "test", "models.test.js"),

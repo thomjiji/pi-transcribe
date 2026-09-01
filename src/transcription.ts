@@ -5,6 +5,7 @@ import type {
   TranscribeModel,
 } from "transcribe-cpp";
 import { convertChineseOutput, isChineseLanguage } from "./chinese.js";
+import { autocorrectCjkText } from "./autocorrect.js";
 import type { ChineseOutput } from "./settings.js";
 
 export type TranscriptionOptions = {
@@ -42,9 +43,10 @@ async function finishTranscript(
   chineseOutput: ChineseOutput,
 ): Promise<string> {
   const trimmed = text.trim();
-  return isChineseLanguage(detectedLanguage || configuredLanguage || "")
-    ? convertChineseOutput(trimmed, chineseOutput)
+  const converted = isChineseLanguage(detectedLanguage || configuredLanguage || "")
+    ? await convertChineseOutput(trimmed, chineseOutput)
     : trimmed;
+  return autocorrectCjkText(converted);
 }
 
 class TranscribeCppDictationStream implements DictationStream {
