@@ -45,6 +45,21 @@ Press the shortcut while Pi has focus, speak, then press it again. A live level 
 
 Final transcripts containing Han characters are formatted with `autocorrect` when it is available at `$PI_CODING_AGENT_DIR/bin/autocorrect` (or `~/.pi/agent/bin/autocorrect`; append `.exe` on Windows). Set `PI_TRANSCRIBE_AUTOCORRECT_PATH` to use another executable. If formatting fails, pi-transcribe keeps the unformatted transcript.
 
+### Windows global dictation
+
+`windows/pi-transcribe.ps1` is an independent Windows tray app. It reuses `~/.pi/agent/pi-transcribe.json`, its configured local GGUF model, and `autocorrect`; Pi does not need to be running.
+
+It requires Node 22+ and PowerShell 7. From a checkout, run:
+
+```powershell
+pwsh -NoProfile -Sta -ExecutionPolicy Bypass -File .\windows\pi-transcribe.ps1
+```
+
+The default global hotkey is `Ctrl+Alt+\`. Press it once to record and once more to transcribe, format, copy, and paste the result into the foreground application. Use the tray icon's **Exit** item to stop it. Validate dependencies and hotkey availability without starting the daemon with `-ValidateOnly`.
+
+> [!NOTE]
+> A normal-integrity process cannot paste into an application running as administrator. Run the dictation host at the same integrity level if that is required.
+
 ## File transcription and FFmpeg
 
 The agent can call `transcribe_file` for local audio or video files. Transcription jobs share one loaded model; queued files reuse it, while microphone dictation runs before waiting file jobs after any active job finishes. To bound memory use, at most two file operations are admitted at once, only one FFmpeg decoder runs at a time, and decoded audio is limited to 128 MiB (about 35 minutes). File decoding requires the `ffmpeg` executable; microphone dictation does not. Install FFmpeg with your system package manager:

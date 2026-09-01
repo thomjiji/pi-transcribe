@@ -33,6 +33,7 @@ try {
     join(outputDirectory, "test", "models.test.js"),
     join(outputDirectory, "test", "pcm-chunker.test.js"),
     join(outputDirectory, "test", "transcription-service.test.js"),
+    join(process.cwd(), "test", "windows-dictation.test.mjs"),
   ]);
 } finally {
   await rm(outputDirectory, { recursive: true, force: true });
